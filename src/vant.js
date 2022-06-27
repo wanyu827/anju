@@ -14,7 +14,7 @@ import {
   Tabbar,
   TabbarItem,
   IndexBar,
-  IndexAnchor, Form, Field, Button, Toast
+  IndexAnchor, Form, Field, Button, Toast, Grid, GridItem, Dialog, Empty
 } from 'vant'
 Vue.use(Cell)
 Vue.use(CellGroup)
@@ -35,6 +35,10 @@ Vue.use(Form)
 Vue.use(Field)
 Vue.use(Button)
 Vue.use(Toast)
+Vue.use(Grid)
+Vue.use(GridItem)
+Vue.use(Dialog)
+Vue.use(Empty)
 // 注册时可以配置额外的选项
 Vue.use(Lazyload, {
   lazyComponent: true

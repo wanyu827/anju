@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main">
     <SearchBar></SearchBar>
     <!-- 轮播图 -->
     <van-swipe :autoplay="3000">
@@ -28,63 +28,54 @@
       </div>
 
       <div class="container">
-        <div class="group-container">
+        <div
+          class="group-container"
+          v-for="obj in houseGroupList"
+          :key="obj.id"
+        >
           <van-image
             width="50"
             height="50"
-            src="https://img01.yzcdn.cn/vant/cat.jpeg"
+            :src="'http://liufusong.top:8080' + obj.imgSrc"
           />
           <div class="right">
-            <p>家住回龙观</p>
-            <p>归属的感觉</p>
-          </div>
-        </div>
-        <div class="group-container">
-          <van-image
-            width="50"
-            height="50"
-            src="https://img01.yzcdn.cn/vant/cat.jpeg"
-          />
-          <div class="right">
-            <p>家住回龙观</p>
-            <p>归属的感觉</p>
-          </div>
-        </div>
-        <div class="group-container">
-          <van-image
-            width="50"
-            height="50"
-            src="https://img01.yzcdn.cn/vant/cat.jpeg"
-          />
-          <div class="right">
-            <p>家住回龙观</p>
-            <p>归属的感觉</p>
-          </div>
-        </div>
-        <div class="group-container">
-          <van-image
-            width="50"
-            height="50"
-            src="https://img01.yzcdn.cn/vant/cat.jpeg"
-          />
-          <div class="right">
-            <p>家住回龙观</p>
-            <p>归属的感觉</p>
+            <p>{{ obj.title }}</p>
+            <p>{{ obj.desc }}</p>
           </div>
         </div>
       </div>
     </div>
-
     <!-- 租房小组结束 -->
+    <!-- 资讯 -->
+    <div class="information">
+      <h3>租房资讯</h3>
+      <span>更多</span>
+    </div>
+    <ul class="info-list">
+      <li v-for="obj in informationList" :key="obj.id">
+        <div class="left">
+          <img :src="'http://liufusong.top:8080' + obj.imgSrc" alt="" />
+        </div>
+        <div class="right">
+          <div class="top">
+            <p>{{ obj.title }}</p>
+          </div>
+          <div class="bottom"><span>租房</span> <span>限购</span></div>
+          <span>{{ obj.date }}</span>
+        </div>
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
 import SearchBar from '@/components/SearchBar.vue'
-import { getSwiperAPI, getCityAPI } from '@/api/home'
+import { getSwiperAPI, getCityAPI, houseGroup, houseInformation } from '@/api/home'
 export default {
   async created () {
     this.getSwiperList()
+    this.getHouseGroup()
+    this.getHouseInformation()
   },
   data () {
     return {
@@ -98,7 +89,9 @@ export default {
         { src: '/imgs/4.png', title: '去出租' }
       ],
       // 城市列表数据
-      cityList: []
+      cityList: [],
+      houseGroupList: [],
+      informationList: []
     }
   },
   methods: {
@@ -115,8 +108,28 @@ export default {
     // 获取城市列表数据
     async getCityList () {
       try {
-        const res = await getCityAPI()
+        const res = await getCityAPI({ level: 1 })
         console.log(res)
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    // 获取租房小组
+    async getHouseGroup () {
+      try {
+        const res = await houseGroup()
+        console.log(res)
+        this.houseGroupList = res.data.body
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    // 获取租房资讯
+    async getHouseInformation () {
+      try {
+        const res = await houseInformation({ area: 'AREA|88cff55c-aaa4-e2e0' })
+        console.log(res)
+        this.informationList = res.data.body
       } catch (err) {
         console.log(err)
       }
@@ -130,6 +143,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.main {
+  margin-bottom: 50px;
+}
+li {
+  list-style: none;
+}
 // 轮播图区域
 .swipe {
   width: 10rem;
@@ -206,6 +225,52 @@ export default {
           padding: 0;
         }
       }
+    }
+  }
+}
+// 资讯
+.information {
+  display: flex;
+  justify-content: space-between;
+  h3 {
+    font-size: 14px;
+    margin: 10px;
+  }
+  span {
+    font-size: 14px;
+    margin: 10px;
+    color: #666;
+  }
+}
+.info-list > li {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  border-bottom: 1px solid #ccc;
+  img {
+    width: 150px;
+  }
+  p {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .bottom {
+    span {
+      font-size: 12px;
+      border: 1px solid #ccc;
+      padding: 2px 8px;
+      color: #666;
+    }
+  }
+  .right {
+    position: relative;
+    margin-left: 10px;
+    & > span {
+      position: absolute;
+      bottom: 0;
+      right: 10px;
+      font-size: 14px;
+      color: #666;
     }
   }
 }

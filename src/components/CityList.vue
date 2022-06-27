@@ -8,7 +8,7 @@
         </router-link>
       </template>
     </van-nav-bar> -->
-    <NavBar title="城市列表"></NavBar>
+    <NavBar title="城市列表" to="/home"></NavBar>
     <!-- 导航栏 -->
     <!-- 热门城市 -->
     <div class="main">
@@ -41,6 +41,7 @@
 <script>
 import NavBar from '@/components/NavBar.vue'
 import { hotCityAPI, allCityAPI } from '@/api/city'
+// import pinyin from 'js-pinyin'
 export default {
   created () {
     this.getHotCityList()
@@ -50,8 +51,7 @@ export default {
     return {
       hotCityList: [],
       indexList: [
-        '#',
-        '热',
+
         'A',
         'B',
         'C',
@@ -72,7 +72,9 @@ export default {
         'Y',
         'Z'
       ],
-      allCityList: []
+      allCityList: [],
+      cityNameList: [],
+      firstName: {}
     }
   },
   methods: {
@@ -100,6 +102,21 @@ export default {
           }
         }
         this.allCityList = res.data.body.sort(sortNumber)
+        /*      for (const key in this.allCityList) {
+          console.log(1)
+          this.cityNameList.push(this.allCityList[key].label)
+        }
+
+        await this.indexList.forEach((item) => {
+          this.firstName[item] = []
+          console.log(11)
+          this.cityNameList.forEach((el) => {
+            const first = pinyin.getFullChars(el).substring(0, 1)
+            if (first === item) {
+              this.firstName[item].push(el)
+            }
+          })
+        }) */
       } catch (err) {
         console.log(err)
       }

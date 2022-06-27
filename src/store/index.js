@@ -16,6 +16,9 @@ export default new Vuex.Store({
   mutations: {
     setUser (state, payload) {
       state.token = payload
+    },
+    delUser (state, payload) {
+      state.token = ''
     }
   },
   actions: {

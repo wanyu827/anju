@@ -12,3 +12,23 @@ export const getCityAPI = (params) =>
     method: 'GET',
     params
   })
+/**
+ *获取租房小组信息
+ * @param {地区id} params
+ * @returns
+ */
+export const houseGroup = params => request({
+  url: '/home/groups',
+  method: 'GET',
+  params
+})
+/**
+ *租房资讯
+ * @param {地区id} params
+ * @returns object
+ */
+export const houseInformation = params => request({
+  url: '/home/news',
+  method: 'GET',
+  params
+})

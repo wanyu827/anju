@@ -1,8 +1,16 @@
 <template>
-  <div>searchhome</div>
+  <div>
+    <van-nav-bar fixed>
+      <template #left>
+        <van-icon name="arrow-left" />
+      </template>
+    </van-nav-bar>
+    <SearchBar class="search"></SearchBar>
+  </div>
 </template>
 
 <script>
+import SearchBar from '@/components/SearchBar.vue'
 export default {
   created () { },
   data () {
@@ -12,8 +20,15 @@ export default {
   computed: {},
   watch: {},
   filters: {},
-  components: {}
+  components: { SearchBar }
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.search {
+  margin-top: -3px;
+  margin-left: 30px;
+  height: 40px;
+  width: 340px;
+}
+</style>

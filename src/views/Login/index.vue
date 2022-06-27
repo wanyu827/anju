@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NavBar title="账号登录"></NavBar>
+    <NavBar to="/myinfo" title="账号登录"></NavBar>
     <van-form @submit="onSubmit" class="main">
       <van-field
         v-model="username"
@@ -26,7 +26,7 @@
       </div>
     </van-form>
 
-    <router-link to="/home"
+    <router-link to="/myinfo"
       ><p class="register">还没有账号，去注册~</p></router-link
     >
   </div>
@@ -60,7 +60,7 @@ export default {
         if (res.data.status === 200) {
           this.$toast.success(res.data.description)
           this.$store.commit('setUser', res.data.body.token)
-          this.$router.push('/home')
+          this.$router.push('/myinfo')
         } else {
           this.$toast.fail(res.data.description)
         }

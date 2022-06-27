@@ -2,7 +2,7 @@
   <div>
     <van-nav-bar :title="title" fixed>
       <template #left>
-        <router-link to="/home">
+        <router-link :to="to">
           <van-icon name="arrow-left" />
         </router-link>
       </template>
@@ -14,6 +14,10 @@
 export default {
   props: {
     title: {
+      type: String,
+      required: true
+    },
+    to: {
       type: String,
       required: true
     }

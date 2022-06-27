@@ -10,3 +10,27 @@ export const login = data => request({
   url: '/user/login',
   data
 })
+/**
+ * 获取用户信息
+ * @param {token} authorization
+ * @returns
+ */
+export const userInfo = authorization => request({
+  url: '/user',
+  headers: {
+    authorization
+  },
+  method: 'GET'
+})
+/**
+ * 查看收藏列表
+ * @param {token} authorization
+ * @returns
+ */
+export const watchCollection = authorization => request({
+  url: '/user/favorites',
+  method: 'GET',
+  headers: {
+    authorization
+  }
+})
