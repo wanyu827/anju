@@ -34,3 +34,15 @@ export const watchCollection = authorization => request({
     authorization
   }
 })
+/**
+ * 查看以发布房源
+ * @param {token} authorization
+ * @returns
+ */
+export const rentHouse = authorization => request({
+  url: '/user/houses',
+  method: 'GET',
+  headers: {
+    authorization
+  }
+})

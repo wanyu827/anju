@@ -2,7 +2,11 @@
   <div>
     <div class="main">
       <img
-        :src="'http://liufusong.top:8080' + userInfoList.avatar"
+        :src="
+          flag
+            ? '/imgs/bg.png'
+            : 'http://liufusong.top:8080' + userInfoList.avatar
+        "
         alt=""
         style="width: 100%"
       />

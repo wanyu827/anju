@@ -7,6 +7,7 @@ import router from '@/router'
 import '@/assets/font/iconfont.css'
 import store from '@/store'
 import pinyin from 'js-pinyin'
+import '@/styles/reset.less'
 pinyin.setOptions({ checkPolyphone: false, charCase: 0 })
 Vue.config.productionTip = false
 

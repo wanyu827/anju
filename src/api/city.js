@@ -12,3 +12,7 @@ export const allCityAPI = params => request({
   url: '/area/city',
   params
 })
+
+export const queryHouseData = (id) => request({
+  url: `/area/map?id=${id}`
+})

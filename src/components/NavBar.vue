@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar :title="title" fixed>
+    <van-nav-bar :title="title ? title : ''" fixed>
       <template #left>
         <router-link :to="to">
           <van-icon name="arrow-left" />

@@ -15,8 +15,10 @@
     <!-- 导航栏 -->
     <van-row class="daohang" gutter="20">
       <van-col span="6" v-for="(item, index) in navList" :key="index">
-        <van-image width="60" height="60" round fit="cover" :src="item.src" />
-        <div>{{ item.title }}</div>
+        <router-link :to="item.to">
+          <van-image width="60" height="60" round fit="cover" :src="item.src" />
+          <div>{{ item.title }}</div>
+        </router-link>
       </van-col>
     </van-row>
     <!-- 导航栏结束 -->
@@ -70,6 +72,7 @@
 
 <script>
 import SearchBar from '@/components/SearchBar.vue'
+
 import { getSwiperAPI, getCityAPI, houseGroup, houseInformation } from '@/api/home'
 export default {
   async created () {
@@ -83,10 +86,10 @@ export default {
       swiperImageList: [],
       // 导航数据
       navList: [
-        { src: '/imgs/1.png', title: '整租' },
-        { src: '/imgs/2.png', title: '合租' },
-        { src: '/imgs/3.png', title: '地图找房' },
-        { src: '/imgs/4.png', title: '去出租' }
+        { src: '/imgs/1.png', title: '整租', to: '' },
+        { src: '/imgs/2.png', title: '合租', to: '' },
+        { src: '/imgs/3.png', title: '地图找房', to: '' },
+        { src: '/imgs/4.png', title: '去出租', to: '/add' }
       ],
       // 城市列表数据
       cityList: [],
@@ -176,8 +179,9 @@ li {
   text-align: center;
   font-size: 14px;
   color: #333;
+  padding-top: 10px;
   .van-image {
-    padding: 10px 0;
+    margin-bottom: 8px;
   }
 }
 // 租房小组

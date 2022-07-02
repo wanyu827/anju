@@ -10,6 +10,9 @@ const CityList = () => import('@/components/CityList.vue')
 const Login = () => import('@/views/Login')
 const Favorites = () => import('@/views/Favorites')
 const Rent = () => import('@/views/Rent')
+const HouseDetails = () => import('@/components/HouseDetails.vue')
+const Map = () => import('@/views/Map')
+const AddHouse = () => import('@/components/AddHouse.vue')
 
 const router = new VueRouter({
   routes: [
@@ -28,7 +31,13 @@ const router = new VueRouter({
     { path: '/city', component: CityList },
     { path: '/login', component: Login },
     { path: '/favorites', component: Favorites },
-    { path: '/rent', component: Rent }
+    { path: '/rent', component: Rent },
+    { path: '/add', component: AddHouse },
+
+    { name: 'details', path: '/details/:id', component: HouseDetails, props: true },
+    // { path: '/map', component: Map },
+    { name: 'map', path: '/map', component: Map, props: true }
+
   ]
 })
 
