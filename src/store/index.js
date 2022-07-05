@@ -9,7 +9,9 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    token: ''
+    token: '',
+    currentCity: '',
+    community: ''
   },
   getters: {
   },
@@ -19,6 +21,15 @@ export default new Vuex.Store({
     },
     delUser (state, payload) {
       state.token = ''
+    },
+    setCurrentCity (state, payload) {
+      state.currentCity = payload
+    },
+    setCommunity (state, payload) {
+      state.community = payload
+    },
+    delCommunity (state) {
+      state.community = {}
     }
   },
   actions: {

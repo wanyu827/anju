@@ -12,26 +12,27 @@
     <!-- 导航栏 -->
     <!-- 热门城市 -->
     <div class="main">
-      <van-index-bar
-        :index-list="indexList"
-        highlight-color="red"
-        :sticky="false"
-      >
-        <van-index-anchor index="1">当前城市</van-index-anchor>
-        <van-cell title="文本" />
+      <van-index-bar :index-list="list" z-index="0">
+        <van-index-anchor index="#">当前城市 </van-index-anchor
+        ><van-cell :title="currentCity" @click="checkCity(currentCity)" />
 
-        <van-index-anchor index="2">热门城市</van-index-anchor>
+        <van-index-anchor index="热">热门城市</van-index-anchor>
         <van-cell
           :title="item.label"
           v-for="(item, index) in hotCityList"
           :key="index"
+          @click="checkCity(item.label)"
         />
-        <van-index-anchor></van-index-anchor>
-        <van-cell
-          :title="item.label"
-          v-for="item in allCityList"
-          :key="item.value"
-        />
+
+        <div v-for="(item, index) in firstName" :key="index">
+          <van-index-anchor :index="index">{{ index }}</van-index-anchor>
+          <van-cell
+            :title="item1"
+            v-for="(item1, index) in item"
+            :key="index"
+            @click="checkCityNull"
+          ></van-cell>
+        </div>
       </van-index-bar>
     </div>
     <!-- 热门城市 -->
@@ -39,9 +40,10 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import NavBar from '@/components/NavBar.vue'
 import { hotCityAPI, allCityAPI } from '@/api/city'
-// import pinyin from 'js-pinyin'
+import pinyin from 'js-pinyin'
 export default {
   created () {
     this.getHotCityList()
@@ -72,6 +74,25 @@ export default {
         'Y',
         'Z'
       ],
+      list: ['#', '热', 'A',
+        'B',
+        'C',
+        'D',
+        'F',
+        'G',
+        'H',
+        'J',
+        'K',
+        'L',
+        'M',
+        'N',
+        'Q',
+        'S',
+        'T',
+        'W',
+        'X',
+        'Y',
+        'Z'],
       allCityList: [],
       cityNameList: [],
       firstName: {}
@@ -87,42 +108,48 @@ export default {
       }
     },
     async getAllcityList () {
+      this.$toast.loading({
+        duration: 0, // 持续展示 toast
+        forbidClick: true,
+        message: '加载中...'
+      })
       try {
         const res = await allCityAPI({ level: 1 })
         console.log(res)
-        function sortNumber (a, b) {
-          const aa = a.short
-          const bb = b.short
-          if (aa < bb) {
-            return -1
-          } else if (aa === bb) {
-            return 0
-          } else {
-            return 1
-          }
-        }
-        this.allCityList = res.data.body.sort(sortNumber)
-        /*      for (const key in this.allCityList) {
-          console.log(1)
+        this.allCityList = res.data.body
+        pinyin.setOptions({ checkPolyphone: false, charCase: 0 })
+        for (const key in this.allCityList) {
           this.cityNameList.push(this.allCityList[key].label)
         }
 
         await this.indexList.forEach((item) => {
           this.firstName[item] = []
-          console.log(11)
           this.cityNameList.forEach((el) => {
             const first = pinyin.getFullChars(el).substring(0, 1)
             if (first === item) {
               this.firstName[item].push(el)
             }
           })
-        }) */
+        })
+        this.$forceUpdate()
+        this.$toast.clear()
       } catch (err) {
         console.log(err)
       }
+    },
+    checkCity (city) {
+      console.log(city)
+      this.$store.commit('setCurrentCity', city)
+      this.$router.push('/home')
+    },
+    checkCityNull () {
+      this.$toast('该城市无房源')
     }
+
   },
-  computed: {},
+  computed: {
+    ...mapState(['currentCity'])
+  },
   watch: {},
   filters: {},
   components: { NavBar }
@@ -136,5 +163,20 @@ export default {
 
 /deep/.van-index-bar__index {
   margin: 7px 0;
+}
+/deep/.van-index-bar__index--active {
+  padding: 0;
+  color: #fff;
+  background-color: #21b97a;
+  border-radius: 100%;
+  display: inline-block;
+  font-size: 12px;
+  width: 15px;
+  height: 15px;
+  line-height: 15px;
+  text-align: center;
+}
+/deep/.van-index-bar__index {
+  padding: none;
 }
 </style>

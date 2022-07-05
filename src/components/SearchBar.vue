@@ -6,17 +6,16 @@
     placeholder="请输入小区或地址"
   >
     <template #label>
-      <router-link to="/city">
-        <span class="address"
-          >深圳<i class="iconfont icon-xiajiantou"></i
-        ></span>
-      </router-link>
+      <span class="address" @click="onClick"
+        >{{ currentCity }}<i class="iconfont icon-xiajiantou"></i
+      ></span>
     </template>
     <template #action> <i class="iconfont icon-ditu"> </i> </template>
   </van-search>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   created () { },
   data () {
@@ -24,8 +23,14 @@ export default {
       value: ''
     }
   },
-  methods: {},
-  computed: {},
+  methods: {
+    onClick () {
+      this.$router.push('/city')
+    }
+  },
+  computed: {
+    ...mapState(['currentCity'])
+  },
   watch: {},
   filters: {},
   components: {}

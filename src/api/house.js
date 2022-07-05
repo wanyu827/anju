@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import qs from 'qs'
 /**
  * 查询房屋具体信息
  * @param {id} id
@@ -45,4 +46,53 @@ export const isFavorites = (authorization, id) => request({
   headers: {
     authorization
   }
+})
+/**
+ * 获取发布房屋所需的条件
+ * @param {token} authorization
+ * @returns
+ */
+export const getPublisherCondition = authorization => request({
+  url: '/houses/params',
+  headers: {
+    authorization
+  }
+})
+/**
+ * 房屋图像上传
+ * @param {*} file
+ * @returns
+ */
+export const updateHouseImg = (file) => request({
+  url: '/houses/image',
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+  },
+  data: {
+    file: qs.stringify({ file })
+  }
+})
+/**
+ * 发布房源
+ * @param {*} data
+ * @param {token} authorization
+ * @returns
+ */
+export const updateHouseSource = (data, authorization) => request({
+  url: '/user/houses',
+  method: 'POST',
+  headers: {
+    authorization
+  },
+  data
+})
+/**
+ * 获取所有房屋列表
+ * @param {token} authorization
+ * @returns
+ */
+export const getAllHouse = (params) => request({
+  url: '/houses',
+  params
 })

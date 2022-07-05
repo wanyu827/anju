@@ -15,5 +15,8 @@ new Vue({
   pinyin,
   store,
   router,
-  render: (h) => h(App)
+  render: (h) => h(App),
+  beforeCreate () {
+    Vue.prototype.$bus = this
+  }
 }).$mount('#app')

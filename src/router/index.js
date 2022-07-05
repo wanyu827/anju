@@ -13,6 +13,7 @@ const Rent = () => import('@/views/Rent')
 const HouseDetails = () => import('@/components/HouseDetails.vue')
 const Map = () => import('@/views/Map')
 const AddHouse = () => import('@/components/AddHouse.vue')
+const RentSearch = () => import('@/components/RentSearch.vue')
 
 const router = new VueRouter({
   routes: [
@@ -36,7 +37,8 @@ const router = new VueRouter({
 
     { name: 'details', path: '/details/:id', component: HouseDetails, props: true },
     // { path: '/map', component: Map },
-    { name: 'map', path: '/map', component: Map, props: true }
+    { name: 'map', path: '/map', component: Map, props: true },
+    { path: '/rentsearch', component: RentSearch }
 
   ]
 })
