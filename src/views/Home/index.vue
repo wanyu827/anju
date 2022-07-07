@@ -89,7 +89,7 @@ export default {
         { src: '/imgs/1.png', title: '整租', to: '' },
         { src: '/imgs/2.png', title: '合租', to: '' },
         { src: '/imgs/3.png', title: '地图找房', to: '' },
-        { src: '/imgs/4.png', title: '去出租', to: '/add' }
+        { src: '/imgs/4.png', title: '去出租', to: this.$store.state.token ? '/add' : '/login' }
       ],
       // 城市列表数据
       cityList: [],

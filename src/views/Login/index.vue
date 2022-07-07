@@ -50,7 +50,8 @@ export default {
       timer = setTimeout(() => {
         this.$toast.loading({
           message: '登录...',
-          forbidClick: true
+          forbidClick: true,
+          duration: 0
         })
       }, 0)
       const res = await login(values)
@@ -68,6 +69,7 @@ export default {
         console.log(err)
         this.$toast.fail(res.data.description)
       }
+      this.$toast.clear()
     }
   },
   computed: {},

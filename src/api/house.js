@@ -1,5 +1,4 @@
 import request from '@/utils/request'
-import qs from 'qs'
 /**
  * 查询房屋具体信息
  * @param {id} id
@@ -69,9 +68,7 @@ export const updateHouseImg = (file) => request({
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
   },
-  data: {
-    file: qs.stringify({ file })
-  }
+  data: file
 })
 /**
  * 发布房源
@@ -95,4 +92,15 @@ export const updateHouseSource = (data, authorization) => request({
 export const getAllHouse = (params) => request({
   url: '/houses',
   params
+})
+/**
+ * 获取房屋查询条件
+ * @param {城市id} id
+ * @returns
+ */
+export const searchHouseCondition = id => request({
+  url: '/houses/condition',
+  params: {
+    id
+  }
 })

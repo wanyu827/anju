@@ -1,10 +1,10 @@
 <template>
   <div>
-    <van-nav-bar :title="title ? title : ''" fixed>
+    <van-nav-bar :title="title ? title : ''" @click-left="$router.back()" fixed>
       <template #left>
-        <router-link :to="to">
-          <van-icon name="arrow-left" />
-        </router-link>
+        <!-- <router-link :to="to"> -->
+        <van-icon name="arrow-left" />
+        <!-- </router-link> -->
       </template>
     </van-nav-bar>
   </div>

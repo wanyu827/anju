@@ -209,11 +209,10 @@ export default {
     }
   },
   methods: {
-    async up () {
-      console.log(this.fileList)
-      const res1 = await updateHouseImg(this.fileList[0].content)
-      console.log(res1)
-    },
+    /*  async afterRead (file) {
+
+      // this.fileList.push(res.data.body[0])
+    }, */
     onConfirm (value) {
       this.currCondition.roomType = value
       this.list.roomType = value.value
@@ -243,13 +242,33 @@ export default {
       this.list.supporting = this.currentSupport.join('|')
     },
     async updateHouse () {
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...'
+      })
+      try {
+        const form = new FormData()
+        this.fileList.forEach(item => form.append('file', item.file))
+        const res = await updateHouseImg(form)
+        console.log(res.data.body.join('|'))
+        this.list.houseImg = res.data.body.join('|')
+      } catch (err) {
+        this.$toast.fail('图片上传失败')
+        console.log(err)
+      }
       try {
         const token = this.$store.state.token
         const res = await updateHouseSource(this.list, token)
         console.log(res)
+        this.$toast.success('发布成功')
       } catch (err) {
         console.log(err)
       }
+      this.$toast.clear()
+      this.list = {}
+      this.fileList = []
+      this.currentSupport = []
+      this.$store.state.community = ''
     },
     cancelUpdate () {
       this.$dialog.confirm({
