@@ -61,15 +61,77 @@
       </div> -->
     </van-popup>
 
-    <van-popup v-model="showMore" position="right" :style="{ height: '100%' }"
-      >11</van-popup
+    <van-popup
+      v-model="showMore"
+      position="right"
+      :style="{ height: '100%', width: '80%' }"
     >
+      <div class="big">
+        <dl>
+          <dt>户型</dt>
+          <dd>
+            <span
+              v-for="(item, index) in conditionList.roomType"
+              :key="index"
+              :class="{ active: selected.indexOf(item.value) != -1 }"
+              @click="active(index, item.value)"
+              >{{ item.label }}</span
+            >
+          </dd>
+          <dt>朝向</dt>
+          <dd>
+            <span
+              v-for="(item, index) in conditionList.oriented"
+              :key="index"
+              :class="{ active: selected.indexOf(item.value) != -1 }"
+              @click="active(index, item.value)"
+              >{{ item.label }}</span
+            >
+          </dd>
+          <dt>楼层</dt>
+          <dd>
+            <span
+              v-for="(item, index) in conditionList.floor"
+              :key="index"
+              :class="{ active: selected.indexOf(item.value) != -1 }"
+              @click="active(index, item.value)"
+              >{{ item.label }}</span
+            >
+          </dd>
+          <dt>房屋亮点</dt>
+          <dd>
+            <span
+              v-for="(item, index) in conditionList.characteristic"
+              :key="index"
+              :class="{ active: selected.indexOf(item.value) != -1 }"
+              @click="active(index, item.value)"
+              >{{ item.label }}</span
+            >
+          </dd>
+        </dl>
+      </div>
+    </van-popup>
+    <div class="btn" v-show="showMore">
+      <van-button @click="onClear">清除</van-button>
+      <van-button type="primary" @click="onConfirmMore">确定</van-button>
+    </div>
+
+    <van-empty
+      v-if="allCityList.length === 0"
+      class="custom-image"
+      image="/imgs/not-found.png"
+      description="描述文字"
+    >
+      <template #description>
+        <span>暂无房源</span>
+      </template>
+    </van-empty>
   </div>
 </template>
 
 <script>
 // import AreaSelect from './components/AreaSelect.vue'
-import { getAllHouse, searchHouseCondition } from '@/api/house'
+import { getAllHouse, searchHouseCondition, searchInfomation } from '@/api/house'
 import { getCityInfo } from '@/api/city'
 import SearchBar from '@/components/SearchBar.vue'
 import HouseList from '@/components/HouseList.vue'
@@ -100,7 +162,9 @@ export default {
         city_list: {},
         county_list: {}
       },
-      selectList: {}
+      selectList: {},
+      searchConditionList: [],
+      selected: []
     }
   },
   methods: {
@@ -188,6 +252,33 @@ export default {
     },
     onConfirm (val, provice, city, country) {
       console.log(val)
+    },
+    onClick (item) {
+      this.searchConditionList.push(item.value)
+    },
+    active (index, item) {
+      // this.selected.indexOf(item) 判断item下标是否为-1，
+      // 是-1则数组中匹配不到该数据，添加
+      // 不是-1则说明匹配到了，抹除
+      if (this.selected.indexOf(item) !== -1) {
+        this.selected.splice(this.selected.indexOf(item), 1) // 取消
+      } else {
+        this.selected.push(item)// 选中添加到数组里
+      }
+      console.log(JSON.parse(JSON.stringify(this.selected)))
+    },
+    onClear () {
+      this.selected = []
+    },
+    async onConfirmMore () {
+      try {
+        const res = await searchInfomation({ cityId: this.cityId, more: this.selected.join(',') })
+        console.log(res)
+        this.allCityList = res.data.body.list
+        this.showMore = false
+      } catch (err) {
+        console.log(err)
+      }
     }
   },
   computed: {},
@@ -245,5 +336,60 @@ export default {
       color: #fff;
     }
   }
+}
+
+.big {
+  padding: 15px;
+}
+dt {
+  font-size: 15px;
+  color: #333;
+  margin: 20px 0;
+}
+dd {
+  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: 14px;
+  margin-left: 40px;
+  margin-right: 40px;
+  span {
+    display: inline-block;
+    height: 32px;
+    width: 70px;
+    margin: 0 20px 15px 0;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    line-height: 32px;
+    text-align: center;
+    font-size: 12px;
+    color: #888;
+  }
+}
+.active {
+  border: 1px solid #21b97a;
+  color: #21b97a;
+  background-color: #defaef;
+}
+.btn {
+  position: fixed;
+  bottom: 0;
+  left: 80px;
+  width: 80%;
+  z-index: 3333;
+  display: flex;
+  .van-button {
+    &:nth-child(1) {
+      flex: 1;
+    }
+    &:nth-child(2) {
+      flex: 2;
+      text-align: center;
+      align-content: center;
+    }
+  }
+}
+/deep/.custom-image .van-empty__image {
+  width: 150px;
+  height: 98px;
+  margin-top: 50px;
 }
 </style>

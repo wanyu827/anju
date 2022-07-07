@@ -104,3 +104,12 @@ export const searchHouseCondition = id => request({
     id
   }
 })
+/**
+ * 根据条件查询房屋
+ * @param {*} params
+ * @returns
+ */
+export const searchInfomation = params => request({
+  url: '/houses',
+  params
+})
