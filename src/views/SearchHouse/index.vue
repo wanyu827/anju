@@ -10,13 +10,13 @@
     </div>
     <van-sticky id="select">
       <van-row type="flex">
-        <van-col span="6" @click="areaClick"
+        <van-col span="6" @click="areaClick" :class="{ selActive: areaShow }"
           >区域<i class="iconfont icon-xiajiantou"></i
         ></van-col>
-        <van-col span="6" @click="typeClick"
+        <van-col span="6" @click="typeClick" :class="{ selActive: typeShow }"
           >方式<i class="iconfont icon-xiajiantou"></i
         ></van-col>
-        <van-col span="6" @click="priceClick"
+        <van-col span="6" @click="priceClick" :class="{ selActive: priceShow }"
           >租金<i class="iconfont icon-xiajiantou"></i
         ></van-col>
         <van-col span="6" @click="moreClick"
@@ -39,13 +39,13 @@
     </van-list>
     <van-popup v-model="showSelect" position="top">
       <van-row type="flex">
-        <van-col span="6" @click="areaClick"
+        <van-col span="6" @click="areaClick" :class="{ selActive: areaShow }"
           >区域<i class="iconfont icon-xiajiantou"></i
         ></van-col>
-        <van-col span="6" @click="typeClick"
+        <van-col span="6" @click="typeClick" :class="{ selActive: typeShow }"
           >方式<i class="iconfont icon-xiajiantou"></i
         ></van-col>
-        <van-col span="6" @click="priceClick"
+        <van-col span="6" @click="priceClick" :class="{ selActive: priceShow }"
           >租金<i class="iconfont icon-xiajiantou"></i
         ></van-col>
         <van-col span="6" @click="moreClick"
@@ -53,7 +53,35 @@
         ></van-col>
       </van-row>
 
-      <van-area :area-list="areaList" value="110000" @confirm="onConfirm" />
+      <!--      <van-picker
+        show-toolbar
+        :columns="
+          areaShow ? areaArrList : typeShow ? typeArrList : priceArrList
+        "
+        @confirm="onConfirmPicker"
+        ref="picker"
+      /> -->
+      <van-picker
+        show-toolbar
+        :columns="areaArrList"
+        @confirm="onConfirmPicker"
+        ref="picker"
+        v-if="areaShow"
+      />
+      <van-picker
+        show-toolbar
+        :columns="typeArrList"
+        @confirm="onConfirmPicker"
+        ref="picker"
+        v-else-if="typeShow"
+      />
+      <van-picker
+        show-toolbar
+        :columns="priceArrList"
+        @confirm="onConfirmPicker"
+        ref="picker"
+        v-else
+      />
 
       <!--  <div class="btn">
         <van-button type="default">取消</van-button>
@@ -145,6 +173,39 @@ export default {
     const res1 = await searchHouseCondition(res.data.body.value)
     // console.log('res1', res1)
     this.conditionList = res1.data.body
+
+    this.areaList = this.conditionList.area
+    this.areaList.text = this.areaList.label
+    this.areaList.children.forEach(item => {
+      item.text = item.label
+
+      if (item.children && item.children !== undefined) {
+        item.children.forEach(item1 => {
+          item1.text = item1.label
+        })
+      } else {
+        item.children = [{ text: '' }]
+      }
+    })
+    if (this.areaList && this.areaList.children !== undefined) {
+      this.areaArrList.push(this.areaList)
+    }
+    this.subwayList = this.conditionList.subway
+    this.subwayList.text = this.subwayList.label
+    this.subwayList.children.forEach(item => {
+      item.text = item.label
+      delete item.label
+      if (item.children && item.children !== undefined) {
+        item.children.forEach(item1 => {
+          item1.text = item1.label
+        })
+      } else {
+        item.children = [{ text: '' }]
+      }
+    })
+    if (this.subwayList && this.subwayList.children !== undefined) {
+      this.areaArrList.push(this.subwayList)
+    }
   },
   data () {
     return {
@@ -157,14 +218,16 @@ export default {
       showSelect: false,
       showMore: false,
       conditionList: {},
-      areaList: {
-        province_list: {},
-        city_list: {},
-        county_list: {}
-      },
+      areaList: {},
+      subwayList: {},
+      areaArrList: [],
+      typeArrList: [],
+      priceArrList: [],
       selectList: {},
-      searchConditionList: [],
-      selected: []
+      selected: [],
+      areaShow: false,
+      typeShow: false,
+      priceShow: false
     }
   },
   methods: {
@@ -190,60 +253,26 @@ export default {
       this.getAllHouseList()
     },
     async areaClick () {
-      this.areaList = {
-        province_list: {},
-        city_list: {},
-        county_list: {}
-      }
-      this.areaList.province_list[110000] = this.conditionList.area.label
-      this.areaList.province_list[120000] = this.conditionList.subway.label
-      let num = 110100
-      this.conditionList.area.children.forEach(item => {
-        this.areaList.city_list[num] = item.label
-        // console.log(item)
-        if (item.children) {
-          item.children.forEach(item => { this.areaList.county_list[num++] = item.label })
-        }
-        num = parseInt(num / 100) * 100 + 100
-      })
-      let num1 = 120100
-      this.conditionList.subway.children.forEach(item => {
-        this.areaList.city_list[num1] = item.label
-        // console.log(item)
-        if (item.children) {
-          item.children.forEach(item => { this.areaList.county_list[num1++] = item.label })
-        }
-        num1 = parseInt(num1 / 100) * 100 + 100
-      })
+      this.areaShow = true
       this.showSelect = true
     },
     typeClick () {
-      this.areaList = {
-        province_list: {},
-        city_list: {},
-        county_list: {}
-      }
-      let num = 110100
-      this.conditionList.rentType.forEach(item => {
-        this.areaList.city_list[num] = item.label
-        num += 100
+      this.typeShow = true
+      this.areaShow = false
+      this.typeArrList = this.conditionList.rentType
+      this.typeArrList.forEach(item => {
+        item.text = item.label
       })
-      // let num = 110100
-      console.log('type')
       this.showSelect = true
     },
     priceClick () {
-      this.areaList = {
-        province_list: {},
-        city_list: {},
-        county_list: {}
-      }
-      let num = 110100
-      this.conditionList.price.forEach(item => {
-        this.areaList.city_list[num] = item.label
-        num += 100
+      this.priceShow = true
+      this.typeShow = false
+      this.areaShow = false
+      this.priceArrList = this.conditionList.price
+      this.priceArrList.forEach(item => {
+        item.text = item.label
       })
-      console.log('price')
       this.showSelect = true
     },
     moreClick () {
@@ -271,6 +300,10 @@ export default {
       this.selected = []
     },
     async onConfirmMore () {
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...'
+      })
       try {
         const res = await searchInfomation({ cityId: this.cityId, more: this.selected.join(',') })
         console.log(res)
@@ -279,6 +312,55 @@ export default {
       } catch (err) {
         console.log(err)
       }
+      this.$toast.clear()
+    },
+    async onConfirmPicker (val) {
+      // const arr = this.$refs.picker.getIndexes()
+      // const arr1 = this.$refs.picker.getColumnValues()
+      // console.log(arr, arr1)
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...'
+      })
+      if (this.areaShow) {
+        console.log(val)
+        let subway = null
+        let area = null
+        const arr = this.$refs.picker.getIndexes()
+        if (arr[0] === 0) {
+          area = this.areaArrList[arr[0]].children[arr[1]].children[arr[2]].value
+        } else {
+          subway = this.areaArrList[arr[0]].children[arr[1]].children[arr[2]].value
+        }
+        console.log(area, subway)
+        try {
+          const res = await searchInfomation({ cityId: this.cityId, area, subway })
+          console.log(res)
+          this.allCityList = res.data.body.list
+          this.showSelect = false
+        } catch (err) {
+          console.log(err)
+        }
+      } else if (this.typeShow) {
+        try {
+          const res = await searchInfomation({ cityId: this.cityId, rentType: val.value })
+          console.log(res)
+          this.allCityList = res.data.body.list
+          this.showSelect = false
+        } catch (err) {
+          console.log(err)
+        }
+      } else {
+        try {
+          const res = await searchInfomation({ cityId: this.cityId, price: val.value })
+          console.log(res)
+          this.allCityList = res.data.body.list
+          this.showSelect = false
+        } catch (err) {
+          console.log(err)
+        }
+      }
+      this.$toast.clear()
     }
   },
   computed: {},
@@ -289,6 +371,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.selActive {
+  color: #21b97a;
+}
 .main {
   margin-bottom: 50px;
 }
